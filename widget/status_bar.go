@@ -19,6 +19,10 @@ func (sb StatusBar) GetHeight() size.Size {
 }
 
 func (sb StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) {
+	clock := Clock{}
+	clock.ForegroundColor = sb.ForegroundColor
+	clock.BackgroundColor = sb.BackgroundColor
+
 	for i := left; i <= right; i++ {
 		for j := top; j <= bottom; j++ {
 			termbox.SetCell(int(i), int(j), ' ', sb.ForegroundColor, sb.BackgroundColor)
@@ -26,10 +30,9 @@ func (sb StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) {
 	}
 
 	// Clock
-	time := " 4:00 PM"
-	tLength := uint32(len(time))
-
-	for i := left; i < (left + tLength); i++ {
-		termbox.SetCell(int(i), int(top), rune(time[i]), sb.ForegroundColor, sb.BackgroundColor)
+	clockLeft := right - uint32(clock.GetWidth()) + 1
+	if clockLeft < left {
+		clockLeft = left
 	}
+	clock.Draw(clockLeft, top, right, bottom)
 }

@@ -27,8 +27,8 @@ func main() {
 	mainContentLayout.Width = size.MatchParent
 
 	sb := widget.StatusBar{}
-	sb.ForegroundColor = termbox.ColorBlack
-	sb.BackgroundColor = 0x667
+	sb.ForegroundColor = termbox.ColorWhite | termbox.AttrBold
+	sb.BackgroundColor = termbox.ColorBlue
 
 	commandArea := widget.CommandArea{}
 
@@ -40,7 +40,7 @@ func main() {
 
 	ch := event.CreateKeyHandlerChannel()
 
-	go event.HandleEvents(ch)
+	go event.HandleEvents(ch, &app)
 
 	app.Run(ch)
 }
