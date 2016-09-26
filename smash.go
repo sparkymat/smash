@@ -2,6 +2,7 @@ package main
 
 import (
 	termbox "github.com/nsf/termbox-go"
+	"github.com/sparkymat/smash/event"
 	"github.com/sparkymat/smash/widget"
 	"github.com/sparkymat/spartan"
 	"github.com/sparkymat/spartan/direction"
@@ -36,5 +37,10 @@ func main() {
 	layout.AddChild(&commandArea)
 
 	app.SetContent(&layout)
-	app.Run()
+
+	ch := event.CreateKeyHandlerChannel()
+
+	go event.HandleEvents(ch)
+
+	app.Run(ch)
 }
