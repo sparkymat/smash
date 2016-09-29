@@ -1,6 +1,7 @@
 package widget
 
 import (
+	"os"
 	"time"
 
 	termbox "github.com/nsf/termbox-go"
@@ -35,7 +36,26 @@ func (sb *StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) 
 		}
 	}
 
+	sb.drawCurrentPath(left, top, right-10, bottom)
 	sb.drawClocK(right-9, top, right, bottom)
+}
+
+func (sb *StatusBar) drawCurrentPath(left uint32, top uint32, right uint32, bottom uint32) {
+	currentPath, err := os.Getwd()
+	if err != nil {
+		return
+	}
+
+	width := right - left + 1
+	length := uint32(len(currentPath))
+
+	if length > width {
+		length = width
+	}
+
+	for i := left; i < (left + length); i++ {
+		termbox.SetCell(int(i), int(top+(bottom-top)/2), rune(currentPath[i-left]), sb.ForegroundColor, sb.BackgroundColor)
+	}
 }
 
 func (sb *StatusBar) drawClocK(left uint32, top uint32, right uint32, bottom uint32) {
