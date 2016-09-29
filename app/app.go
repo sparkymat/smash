@@ -11,7 +11,7 @@ import (
 	"github.com/sparkymat/spartan/size"
 )
 
-type smashApp struct {
+type SmashApp struct {
 	spartanApp          spartan.App
 	eventHandlerChannel chan termbox.Event
 
@@ -23,8 +23,8 @@ type smashApp struct {
 	ticker *time.Ticker
 }
 
-func New() *smashApp {
-	sa := smashApp{}
+func New() *SmashApp {
+	sa := SmashApp{}
 	sa.spartanApp = spartan.New()
 	sa.eventHandlerChannel = make(chan termbox.Event)
 
@@ -57,7 +57,7 @@ func New() *smashApp {
 	return &sa
 }
 
-func (sa *smashApp) Run() {
+func (sa *SmashApp) Run() {
 	go event.Handler(sa.eventHandlerChannel)
 	go func() {
 		for _ = range sa.ticker.C {
@@ -68,11 +68,11 @@ func (sa *smashApp) Run() {
 	sa.spartanApp.Run(sa.eventHandlerChannel)
 }
 
-func (sa *smashApp) CleanupForTermination() {
+func (sa *SmashApp) CleanupForTermination() {
 	sa.ticker.Stop()
 }
 
-func (sa *smashApp) OnTick() {
+func (sa *SmashApp) OnTick() {
 	sa.contentArea.OnTick()
 	sa.statusBar.OnTick()
 	sa.commandArea.OnTick()
