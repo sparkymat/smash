@@ -1,6 +1,8 @@
 package app
 
 import (
+	"time"
+
 	termbox "github.com/nsf/termbox-go"
 	"github.com/sparkymat/smash/event"
 	"github.com/sparkymat/smash/widget"
@@ -17,6 +19,8 @@ type smashApp struct {
 	contentArea widget.ContentArea
 	statusBar   widget.StatusBar
 	commandArea widget.CommandArea
+
+	ticker *time.Ticker
 }
 
 func New() *smashApp {
@@ -48,10 +52,28 @@ func New() *smashApp {
 
 	sa.spartanApp.SetContent(sa.mainLayout)
 
+	sa.ticker = time.NewTicker(time.Millisecond * 200)
+
 	return &sa
 }
 
 func (sa *smashApp) Run() {
 	go event.Handler(sa.eventHandlerChannel)
+	go func() {
+		for _ = range sa.ticker.C {
+			sa.OnTick()
+		}
+	}()
+
 	sa.spartanApp.Run(sa.eventHandlerChannel)
+}
+
+func (sa *smashApp) CleanupForTermination() {
+	sa.ticker.Stop()
+}
+
+func (sa *smashApp) OnTick() {
+	sa.contentArea.OnTick()
+	sa.statusBar.OnTick()
+	sa.commandArea.OnTick()
 }

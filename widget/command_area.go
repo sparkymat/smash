@@ -29,3 +29,6 @@ func (ca CommandArea) drawWaitingState(left uint32, top uint32, right uint32, bo
 		termbox.SetCell(int(i), int(y), rune(msgText[i-x]), ca.ForegroundColor, ca.BackgroundColor)
 	}
 }
+
+func (ca CommandArea) OnTick() {
+}

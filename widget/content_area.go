@@ -8,3 +8,6 @@ type ContentArea struct {
 
 func (ca ContentArea) Draw(left uint32, top uint32, right uint32, bottom uint32) {
 }
+
+func (ca ContentArea) OnTick() {
+}
