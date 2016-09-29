@@ -9,9 +9,26 @@ import (
 
 type StatusBar struct {
 	spartan.View
+
+	Left   uint32
+	Right  uint32
+	Top    uint32
+	Bottom uint32
 }
 
-func (sb StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) {
+func (sb *StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) {
+	width := right - left + 1
+	height := bottom - top + 1
+
+	if width == 0 || height == 0 {
+		return
+	}
+
+	sb.Left = left
+	sb.Right = right
+	sb.Top = top
+	sb.Bottom = bottom
+
 	for i := left; i <= right; i++ {
 		for j := top; j <= bottom; j++ {
 			termbox.SetCell(int(i), int(j), ' ', sb.ForegroundColor, sb.BackgroundColor)
@@ -21,7 +38,7 @@ func (sb StatusBar) Draw(left uint32, top uint32, right uint32, bottom uint32) {
 	sb.drawClocK(right-9, top, right, bottom)
 }
 
-func (sb StatusBar) drawClocK(left uint32, top uint32, right uint32, bottom uint32) {
+func (sb *StatusBar) drawClocK(left uint32, top uint32, right uint32, bottom uint32) {
 	t := time.Now()
 	timeText := t.Format(" 15:04:05")
 
@@ -37,5 +54,7 @@ func (sb StatusBar) drawClocK(left uint32, top uint32, right uint32, bottom uint
 	}
 }
 
-func (sb StatusBar) OnTick() {
+func (sb *StatusBar) OnTick() {
+	sb.Draw(sb.Left, sb.Top, sb.Right, sb.Bottom)
+	termbox.Flush()
 }
