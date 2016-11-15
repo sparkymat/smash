@@ -4,6 +4,7 @@ import (
 	"time"
 
 	termbox "github.com/nsf/termbox-go"
+	"github.com/sparkymat/smash/app/mode"
 	"github.com/sparkymat/smash/event"
 	"github.com/sparkymat/smash/widget"
 	"github.com/sparkymat/spartan"
@@ -12,21 +13,23 @@ import (
 )
 
 type SmashApp struct {
-	spartanApp          spartan.App
+	commandArea         widget.CommandArea
+	contentArea         widget.ContentArea
 	eventHandlerChannel chan termbox.Event
-
-	mainLayout  spartan.LinearLayout
-	contentArea widget.ContentArea
-	statusBar   widget.StatusBar
-	commandArea widget.CommandArea
-
-	ticker *time.Ticker
+	mainLayout          spartan.LinearLayout
+	spartanApp          spartan.App
+	statusBar           widget.StatusBar
+	mode                mode.Mode
+	ticker              *time.Ticker
 }
 
 func New() *SmashApp {
 	sa := SmashApp{}
+
 	sa.spartanApp = spartan.New()
+
 	sa.eventHandlerChannel = make(chan termbox.Event)
+	sa.mode = mode.Idle
 
 	sa.mainLayout = spartan.LinearLayout{}
 	sa.mainLayout.Direction = direction.Vertical

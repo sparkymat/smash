@@ -19,6 +19,7 @@ func handleEvent(ev termbox.Event) {
 		if ev.Key == termbox.KeyEsc {
 			termbox.Close()
 			os.Exit(0)
+		} else if ev.Key == termbox.KeySpace {
 		}
 	}
 }
